@@ -273,9 +273,16 @@ def main(url):
           # 更新nums列表
           nums.append(num)
 
+          # 處理訊息
+          params_message = Process_Message(event['category'], event['date'], event['department'], event['title'], link, event['content'])
+          
           # 傳送至LINE Notify
           print(f"Sent: {link}", end=' ')
-          LINE_Notify(event['category'], event['date'], event['department'], event['title'], link, event['content'])
+          for LINE_Notify_ID in LINE_Notify_IDs:
+              LINE_Notify(params_message, LINE_Notify_ID)
+
+          # 傳送至Discord
+          dc_send(params_message, discord_token, discord_guild_id, discord_channel_id)
 
         # 刪除num
         del num
